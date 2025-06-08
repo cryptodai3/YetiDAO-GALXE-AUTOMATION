@@ -1,6 +1,6 @@
 (function () {
   if (window.taskScriptAlreadyRun) {
-    console.warn("⚠️ Script sudah pernah dijalankan. Abort.");
+    console.warn("⚠️ Script has already been run. Aborting.");
     return;
   }
   window.taskScriptAlreadyRun = true;
@@ -13,7 +13,7 @@
   }
 
   function refreshPage() {
-    console.log("🔄 Melakukan refresh halaman...");
+    console.log("🔄 Refreshing the page...");
     location.reload();
   }
 
@@ -29,7 +29,7 @@
         return matchText && !isVerified && hasClickable;
       });
 
-    console.log(`🔍 Ditemukan ${containers.length} task yang belum selesai.`);
+    console.log(`🔍 Found ${containers.length} incomplete tasks.`);
 
     for (let i = 0; i < containers.length; i++) {
       if (!isRunningTask) break;
@@ -37,7 +37,7 @@
       const container = containers[i];
       const clickable = container.querySelector(".cursor-pointer");
 
-      console.log(`➡️ Memproses task #${i + 1}...`);
+      console.log(`➡️ Processing task #${i + 1}...`);
 
       if (!clickable) {
         continue;
@@ -48,22 +48,22 @@
 
       clickable.scrollIntoView({ behavior: "smooth", block: "center" });
       clickable.click();
-      console.log("✅ Klik task");
+      console.log("✅ Task clicked");
 
       const delay = 2500 + Math.random() * 2500;
       const delaySec = Math.round(delay / 1000);
-      console.log(`⏳ Tunggu ${delaySec} detik sebelum lanjut...`);
+      console.log(`⏳ Waiting ${delaySec} seconds before continuing...`);
       await sleep(delay);
 
       if (!isRunningTask) {
-        console.warn("⛔ Proses task dihentikan.");
+        console.warn("⛔ Task process stopped.");
         break;
       }
 
       window.open = originalWindowOpen;
     }
 
-    console.log("🎉 Semua task yang belum selesai & valid sudah diproses.");
+    console.log("🎉 All incomplete and valid tasks have been processed.");
     isRunningTask = false;
 
     refreshPage();
@@ -75,7 +75,7 @@
       exitDialogObserver.disconnect();
       exitDialogObserver = null;
     }
-    console.log("🛑 Semua proses dihentikan oleh pengguna.");
+    console.log("🛑 All processes stopped by user.");
     refreshPage();
   }
 
@@ -104,11 +104,11 @@
       }
 
       if (isCaptchaVisible()) {
-        console.warn("🛑 CAPTCHA terdeteksi! Task dihentikan.");
+        console.warn("🛑 CAPTCHA detected! Stopping task.");
         isRunningTask = false;
         alreadyStopped = true;
         clearInterval(intervalId);
-        alert("⚠️ CAPTCHA terdeteksi! Proses otomatis dihentikan.");
+        alert("⚠️ CAPTCHA detected! Automatic process stopped.");
       }
     }, 800);
   }
@@ -148,11 +148,11 @@
 
     document.getElementById("startTask").addEventListener("click", async () => {
       if (isRunningTask) {
-        console.log("⚠️ Task sedang berjalan.");
+        console.log("⚠️ Task is already running.");
         return;
       }
       isRunningTask = true;
-      console.log("🚀 Memulai task...");
+      console.log("🚀 Starting task...");
       observeCaptcha();
       autoCloseExitDialog();
       await clickUnverifiedTasks();
